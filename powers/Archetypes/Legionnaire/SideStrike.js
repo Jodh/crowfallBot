@@ -12,6 +12,6 @@ exports.power = {
   range: "5 Meters", //how far it travels, this is a string ("3 meters" or "3M/S) (false if not specified)
   cost: false, //localized cost to archetype (energy, rage, mana, etc), false if not listed.
   restores: "0.9 Rage" // added for negative cost spells
-  tooltip: "Removes all movement impairing effects. Increases group movement speed by 10%", //full description of power (REQUIRED)
+  tooltip: "Strike in front of you for 616 - 752 + 68% Weapon Damage.", //full description of power (REQUIRED)
   icon: false, //we'll grab these later on. leave false for now.
 };
