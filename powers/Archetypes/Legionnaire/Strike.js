@@ -11,7 +11,7 @@ exports.power = {
   velocity: false, //how fast some ranged powers travel, false if not specified
   range: "5 Meters", //how far it travels, this is a string ("3 meters" or "3M/S) (false if not specified)
   cost: false, //localized cost to archetype (energy, rage, mana, etc), false if not listed.
-  restores: "0.9 Rage" // added for negative cost spells
+//  restores: "0.9 Rage" // added for negative cost spells
   tooltip: "Strike in front of you for 536 - 655 + 60% Weapon Damage, generating 0.9 Rage if you hit.", //full description of power (REQUIRED)
   icon: false, //we'll grab these later on. leave false for now.
 };
