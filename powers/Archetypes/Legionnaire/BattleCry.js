@@ -11,6 +11,6 @@ exports.power = {
   velocity: false, //how fast some ranged powers travel, false if not specified
   range: false, //how far it travels, this is a string ("3 meters" or "3M/S) (false if not specified)
   cost: "15 Rage", //localized cost to archetype (energy, rage, mana, etc), false if not listed.
-  tooltip: "Slash upward violently inflicting 469 - 573 + 52% Weapon Damage", //full description of power (REQUIRED)
+  tooltip: "Removes all movement impairing effects. Increases group movement speed by 10%", //full description of power (REQUIRED)
   icon: false, //we'll grab these later on. leave false for now.
 };
