@@ -18,6 +18,7 @@ crowfallBot.settings = new Discord.Collection();
 crowfallBot.powers = new Discord.Collection();
 crowfallBot.archetypes = new Discord.Collection();
 
+//Loads ALL Bot Commands
 let commandLoader = function(currentPath) {
   log("Searching for Commands... " + currentPath);
   let files = fs.readdirSync(currentPath);
@@ -38,6 +39,7 @@ let commandLoader = function(currentPath) {
 };
 commandLoader('./commands');
 
+//Loads All Powers For All Disciplines and Archetypes
 let powersLoader = function(currentPath) {
   log("Researching Powers... " + currentPath);
   let files = fs.readdirSync(currentPath);
@@ -55,6 +57,7 @@ let powersLoader = function(currentPath) {
 };
 powersLoader('./powers');
 
+//Loads All Archetype & Promotion Archetype General Information
 let archetypesLoader = function(currentPath) {
   log("Researching Archetypes... " + currentPath);
   let files = fs.readdirSync(currentPath);
@@ -72,24 +75,32 @@ let archetypesLoader = function(currentPath) {
 };
 archetypesLoader('./archetypes');
 
-
 crowfallBot.on("message", msg => {
-  if (!msg.content.toLowerCase().startsWith(config.prefix.toLowerCase())) return;
-  let command = msg.content.split(" ")[0].slice(config.prefix.length).toLowerCase();
-  let params = msg.content.split(" ").slice(1);
-  let perms = crowfallBot.elevation(msg);
-  log(`${command} executed with permission level ${perms} by ${msg.author.username}`);
-  let cmd;
-  if (crowfallBot.commands.has(command)) {
-    cmd = crowfallBot.commands.get(command);
-  } else if (crowfallBot.aliases.has(command)) {
-    cmd = crowfallBot.commands.get(crowfallBot.aliases.get(command));
+  let currentPermissions = msg.channel.permissionsFor(crowfallBot.user);
+  if (msg.channel.type === "dm" || currentPermissions.hasPermissions(["SEND_MESSAGES", "EMBED_LINKS"])) {
+    if (!msg.content.toLowerCase().startsWith(config.prefix.toLowerCase())) return;
+    let command = msg.content.split(" ")[0].slice(config.prefix.length).toLowerCase();
+    let params = msg.content.split(" ").slice(1);
+    let perms = crowfallBot.elevation(msg);
+    log(`"${config.prefix}${command} ${params.join(" ")}" executed with permission level ${perms} by ${msg.author.username}`);
+    let cmd;
+    if (crowfallBot.commands.has(command)) {
+      cmd = crowfallBot.commands.get(command);
+    } else if (crowfallBot.aliases.has(command)) {
+      cmd = crowfallBot.commands.get(crowfallBot.aliases.get(command));
+    }
+    if (cmd) {
+      if (perms < cmd.conf.permLevel) return msg.channel.sendMessage(`${msg.author.toString()} you are not authorized to run ${config.prefix}${command}`);
+      cmd.run(crowfallBot, msg, params, perms, r);
+      //make sure bot has permissiosn to delete stuff.
+      if (currentPermissions.hasPermission("MANAGE_MESSAGES")) {
+        msg.delete(5000);
+      }
+    }
+  } else {
+    msg.author.sendMessage("CrowfallBot requires Send Messages and Embed Links permissions to work properly. Contact your server owner and grant it these to use this function!");
   }
-  if (cmd) {
-    if (perms < cmd.conf.permLevel) return msg.channel.sendMessage(`${msg.author.toString()} you are not authorized to run ${config.prefix}${command}`);
-    cmd.run(crowfallBot, msg, params, perms, r);
-    msg.delete(10000);
-  }
+
 });
 
 crowfallBot.on("ready", () => {
